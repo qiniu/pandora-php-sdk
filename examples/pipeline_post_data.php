@@ -11,8 +11,8 @@ require_once '../autoload.php';
 use Pandora\Service\PipelineService;
 use Pandora\Auth;
 
-$accessKey = 'bjtWBQXrcxgo7HWwlC_bgHg81j352_GhgBGZPeOW';
-$secretKey = 'pCav6rTslxP2SIFg0XJmAw53D9PjWEcuYWVdUqAf';
+$accessKey = '';
+$secretKey = '';
 $repoName = 'uploadtest';
 $auth = new Auth($accessKey, $secretKey);
 
