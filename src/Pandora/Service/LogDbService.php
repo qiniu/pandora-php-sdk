@@ -8,7 +8,7 @@ use Pandora\Http\Client;
 final class LogDbService {
 
     private $repoName;
-    private  $auth;
+    private $auth;
 
     public function __construct($repoName, $auth) {
         $this->repoName = $repoName;
