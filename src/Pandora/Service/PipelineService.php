@@ -5,7 +5,7 @@ namespace Pandora\Service;
 use Pandora\Config;
 use Pandora\Http\Client;
 
-final class LogDbService {
+final class PipelineService {
 
     private $repoName;
     private  $auth;
