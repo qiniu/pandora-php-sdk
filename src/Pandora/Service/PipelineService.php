@@ -67,23 +67,14 @@ final class PipelineService {
         return $this->post($path, $params, 'application/json');
     }
 
-=======
->>>>>>> qiniu/master
     public function postData(array $points) {
 
         $path = "/v2/repos/$this->repoName/data";
         $body = $this->buildBody($points);
 
-<<<<<<< HEAD
         return $this->post($path, $body, 'text/plain');
     }
 
-=======
-        return $this->post($path, null, $body);
-    }
-
-
->>>>>>> qiniu/master
     private function buildBody(array $points) {
 
         $pointArr = array();
@@ -113,20 +104,9 @@ final class PipelineService {
         return str_replace(array("\n", "\r"),  array('\\n', '\\t'), $str);
     }
 
-<<<<<<< HEAD
-
     private function post($path, $body, $contentType) {
 
         $headers['Content-Type'] = $contentType;
-=======
-    private function post($path, $headers, $body) {
-
-        if (!isset($headers['Content-Type'])) {
-            $headers['Content-Type'] = "text/plain";
-        }
-        $contentType = $headers['Content-Type'];
-
->>>>>>> qiniu/master
         $accessToken = $this->auth->createAccessToken('POST', $path, $headers, $contentType);
         $headers['Authorization'] = $accessToken;
 
@@ -135,8 +115,3 @@ final class PipelineService {
         return Client::post($url, $body, $headers);
     }
 }
-<<<<<<< HEAD
-
-
-=======
->>>>>>> qiniu/master
