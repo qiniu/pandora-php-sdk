@@ -9,7 +9,7 @@
 namespace Pandora\Service;
 
 
-class HttpExport
+class HttpExport extends Export
 {
     public $host;
     public $uri;

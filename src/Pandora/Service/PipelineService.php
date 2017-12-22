@@ -60,7 +60,6 @@ final class PipelineService {
 
         $params = array(
             'type' => $type,
-//            'spec' => json_encode($spec),
             'spec' => $spec,
             'whence' => $whence
         );
@@ -105,6 +104,7 @@ final class PipelineService {
     private function escape($str) {
         return str_replace(array("\n", "\r"),  array('\\n', '\\t'), $str);
     }
+
 
     private function post($path, $body, $contentType) {
 

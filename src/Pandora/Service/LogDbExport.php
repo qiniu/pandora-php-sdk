@@ -9,7 +9,7 @@
 namespace Pandora\Service;
 
 
-class LogDbExport
+class LogDbExport extends Export
 {
     public $destRepoName;
     public $omitInvalid = false;
@@ -19,6 +19,6 @@ class LogDbExport
     public function __construct($destRepoName, $doc)
     {
         $this->destRepoName = $destRepoName;
-        $this->doc = $doc;
+        $this->doc = $this->srcFieldFormat($doc);
     }
 }
