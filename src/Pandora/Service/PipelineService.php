@@ -6,6 +6,16 @@ use Pandora\Http\Client;
 
 final class PipelineService {
 
+    const EXPORT_WHENCE_OLDEST = 'oldest';
+    const EXPORT_WHENCE_NEWST = 'newst';
+
+    const EXPORT_TYPE_HTTP = 'http';
+    const EXPORT_TYPE_LOGDB = 'logdb';
+    const EXPORT_TYPE_MONGO = 'mongo';
+    const EXPORT_TYPE_TSDB = 'tsdb';
+    const EXPORT_TYPE_KODO = 'kodo';
+    const EXPORT_TYPE_REPORT = 'report';
+
     private $repoName;
     private $auth;
 
@@ -32,6 +42,28 @@ final class PipelineService {
         }
 
         $path = "/v2/repos/$this->repoName";
+        $params = json_encode($params);
+
+        return $this->post($path, $params, 'application/json');
+    }
+
+    /**
+     * @param $type   http|logdb|mongo|tsdb|kodo|report
+     * @param $exportName
+     * @param $spec
+     * @param string $whence  oldest|newest
+     * @return \Pandora\Http\Response
+     */
+    public function export($type, $exportName, $spec, $whence = 'oldest') {
+
+        $path = "/v2/repos/$this->repoName/exports/$exportName";
+
+        $params = array(
+            'type' => $type,
+//            'spec' => json_encode($spec),
+            'spec' => $spec,
+            'whence' => $whence
+        );
         $params = json_encode($params);
 
         return $this->post($path, $params, 'application/json');
