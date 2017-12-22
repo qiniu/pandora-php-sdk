@@ -14,14 +14,36 @@ final class PipelineService {
         $this->auth = $auth;
     }
 
+    /**
+     * @param  $schema
+     * @param array() $options array("withIP" => "xx")
+     * @param string $region
+     * @return \Pandora\Http\Response
+     */
+    public function createRepo(array $schema, $options = null, $region = 'nb') {
+
+        $params = array(
+            'schema' => $schema,
+            'region' => $region
+        );
+
+        if (isset($options)) {
+            $params['options'] = $options;
+        }
+
+        $path = "/v2/repos/$this->repoName";
+        $params = json_encode($params);
+
+        return $this->post($path, $params, 'application/json');
+    }
+
     public function postData(array $points) {
 
         $path = "/v2/repos/$this->repoName/data";
         $body = $this->buildBody($points);
 
-        return $this->post($path, null, $body);
+        return $this->post($path, $body, 'text/plain');
     }
-
 
     private function buildBody(array $points) {
 
@@ -52,13 +74,9 @@ final class PipelineService {
         return str_replace(array("\n", "\r"),  array('\\n', '\\t'), $str);
     }
 
-    private function post($path, $headers, $body) {
+    private function post($path, $body, $contentType) {
 
-        if (!isset($headers['Content-Type'])) {
-            $headers['Content-Type'] = "text/plain";
-        }
-        $contentType = $headers['Content-Type'];
-
+        $headers['Content-Type'] = $contentType;
         $accessToken = $this->auth->createAccessToken('POST', $path, $headers, $contentType);
         $headers['Authorization'] = $accessToken;
 
@@ -67,3 +85,5 @@ final class PipelineService {
         return Client::post($url, $body, $headers);
     }
 }
+
+
