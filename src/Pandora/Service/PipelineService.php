@@ -71,9 +71,12 @@ final class PipelineService {
     public function updateExport($exportName, $spec) {
         $path = "/v2/repos/$this->repoName/exports/$exportName";
 
-        $spec = json_encode($spec);
+        $params = array(
+            'spec' => $spec,
+        );
+        $params = json_encode($params);
 
-        return $this->put($path, $spec, 'application/json');
+        return $this->put($path, $params, 'application/json');
     }
 
     public function postData(array $points) {
@@ -124,7 +127,7 @@ final class PipelineService {
     private function request($method, $path, $body, $contentType) {
 
         $headers['Content-Type'] = $contentType;
-        $accessToken = $this->auth->createAccessToken('POST', $path, $headers, $contentType);
+        $accessToken = $this->auth->createAccessToken($method, $path, $headers, $contentType);
         $headers['Authorization'] = $accessToken;
 
         $url = Config::PIPELINE_API_ADDRESS . $path;
