@@ -1,20 +1,13 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: wf
- * Date: 2017/12/22
- * Time: 下午4:55
- */
-
 namespace Pandora\Service;
 
 
-class Export
+class Export implements \JsonSerializable
 {
     function srcFieldFormat(array $fields) {
         foreach ($fields as $key => $val) {
             if (is_array($val)) {
-               $fields[$key] = srcFieldFormat($val);
+               $fields[$key] = $this->srcFieldFormat($val);
                continue;
             }
 
@@ -25,5 +18,19 @@ class Export
             $fields[$key] = '#' . $val;
         }
         return $fields;
+    }
+
+    public function jsonSerialize()
+    {
+        $jsonVars = [];
+        $vars = get_object_vars($this);
+
+        foreach ($vars as $key => $var) {
+            if (!empty($var)) {
+               $jsonVars[$key] = $var;
+            }
+        }
+
+        return $jsonVars;
     }
 }
