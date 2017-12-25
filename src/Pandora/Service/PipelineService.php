@@ -68,6 +68,14 @@ final class PipelineService {
         return $this->post($path, $params, 'application/json');
     }
 
+    public function updateExport($exportName, $spec) {
+        $path = "/v2/repos/$this->repoName/exports/$exportName";
+
+        $spec = json_encode($spec);
+
+        return $this->put($path, $spec, 'application/json');
+    }
+
     public function postData(array $points) {
 
         $path = "/v2/repos/$this->repoName/data";
@@ -106,6 +114,14 @@ final class PipelineService {
     }
 
     private function post($path, $body, $contentType) {
+       return $this->request("POST", $path, $body, $contentType);
+    }
+
+    private function put($path, $body, $contentType) {
+        return $this->request("PUT", $path, $body, $contentType);
+    }
+
+    private function request($method, $path, $body, $contentType) {
 
         $headers['Content-Type'] = $contentType;
         $accessToken = $this->auth->createAccessToken('POST', $path, $headers, $contentType);
@@ -113,6 +129,6 @@ final class PipelineService {
 
         $url = Config::PIPELINE_API_ADDRESS . $path;
 
-        return Client::post($url, $body, $headers);
+        return Client::request($method, $url, $body, $headers);
     }
 }
