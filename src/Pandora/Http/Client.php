@@ -9,13 +9,17 @@ final class Client
 {
     public static function get($url, array $headers = array())
     {
-        $request = new Request('GET', $url, $headers);
-        return self::sendRequest($request);
+        return self::request("PUT", $url, null, $headers);
     }
 
     public static function post($url, $body, array $headers = array())
     {
-        $request = new Request('POST', $url, $headers, $body);
+        return self::request("POST", $url, $body, $headers);
+    }
+
+    public static function request($method, $url, $body, array $headers = array())
+    {
+        $request = new Request($method, $url, $headers, $body);
         return self::sendRequest($request);
     }
 
