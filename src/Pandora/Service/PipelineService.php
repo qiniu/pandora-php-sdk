@@ -113,7 +113,7 @@ final class PipelineService {
     }
 
     private function escape($str) {
-        return str_replace(array("\n", "\r"),  array('\\n', '\\t'), $str);
+        return str_replace(array("\n", "\t"),  array('\\n', '\\t'), $str);
     }
 
     private function post($path, $body, $contentType) {
