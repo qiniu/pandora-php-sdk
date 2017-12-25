@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: wf
- * Date: 2017/12/22
- * Time: 上午10:10
- */
-
 namespace Pandora\Service;
 
 

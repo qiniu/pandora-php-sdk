@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: wf
- * Date: 2017/12/22
- * Time: 下午4:08
- */
-
 require_once '../autoload.php';
 
 use Pandora\Service\PipelineService;
