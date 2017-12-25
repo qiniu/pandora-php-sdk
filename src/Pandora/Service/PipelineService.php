@@ -13,7 +13,7 @@ final class PipelineService {
     const EXPORT_TYPE_LOGDB = 'logdb';
     const EXPORT_TYPE_MONGO = 'mongo';
     const EXPORT_TYPE_TSDB = 'tsdb';
-    const EXPORT_TYPE_KODO = 'kodo';
+    const EXPORT_TYPE_STORAGE = 'kodo';
     const EXPORT_TYPE_REPORT = 'report';
 
     private $repoName;
