@@ -23,49 +23,6 @@ final class PipelineService {
         $this->repoName = $repoName;
         $this->auth = $auth;
     }
-    /**
-     * @param  $schema
-     * @param array() $options array("withIP" => "xx")
-     * @param string $region
-     * @return \Pandora\Http\Response
-     */
-    public function createRepo(array $schema, $options = null, $region = 'nb') {
-
-        $params = array(
-            'schema' => $schema,
-            'region' => $region
-        );
-
-        if (isset($options)) {
-            $params['options'] = $options;
-        }
-
-        $path = "/v2/repos/$this->repoName";
-        $params = json_encode($params);
-
-        return $this->post($path, $params, 'application/json');
-    }
-
-    /**
-     * @param $type   http|logdb|mongo|tsdb|kodo|report
-     * @param $exportName
-     * @param $spec
-     * @param string $whence  oldest|newest
-     * @return \Pandora\Http\Response
-     */
-    public function export($type, $exportName, $spec, $whence = 'oldest') {
-
-        $path = "/v2/repos/$this->repoName/exports/$exportName";
-
-        $params = array(
-            'type' => $type,
-            'spec' => $spec,
-            'whence' => $whence
-        );
-        $params = json_encode($params);
-
-        return $this->post($path, $params, 'application/json');
-    }
 
     /**
      * @param  $schema
