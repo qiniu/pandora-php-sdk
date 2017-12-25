@@ -23,6 +23,7 @@ final class PipelineService {
         $this->repoName = $repoName;
         $this->auth = $auth;
     }
+
     /**
      * @param  $schema
      * @param array() $options array("withIP" => "xx")
@@ -47,7 +48,7 @@ final class PipelineService {
     }
 
     /**
-     * @param $type   http|logdb|mongo|tsdb|kodo|report
+     * @param $type   "http|logdb|mongo|tsdb|kodo|report"
      * @param $exportName
      * @param $spec
      * @param string $whence  oldest|newest

@@ -17,9 +17,9 @@ class TsDbExport extends Export
     public $omitEmpty = false;
     public $fields;
     public $tags;
-    public $timestamp;
+    public $timestamp = '';
 
-    public function __construct($destRepoName, $series, $tags, $fields)
+    public function __construct($destRepoName, $series, array $tags, array $fields)
     {
         $this->destRepoName = $destRepoName;
         $this->series = $series;
