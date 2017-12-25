@@ -13,7 +13,7 @@ final class PipelineService {
     const EXPORT_TYPE_LOGDB = 'logdb';
     const EXPORT_TYPE_MONGO = 'mongo';
     const EXPORT_TYPE_TSDB = 'tsdb';
-    const EXPORT_TYPE_KODO = 'kodo';
+    const EXPORT_TYPE_STORAGE = 'kodo';
     const EXPORT_TYPE_REPORT = 'report';
 
     private $repoName;
@@ -68,6 +68,17 @@ final class PipelineService {
         return $this->post($path, $params, 'application/json');
     }
 
+    public function updateExport($exportName, $spec) {
+        $path = "/v2/repos/$this->repoName/exports/$exportName";
+
+        $params = array(
+            'spec' => $spec,
+        );
+        $params = json_encode($params);
+
+        return $this->put($path, $params, 'application/json');
+    }
+
     public function postData(array $points) {
 
         $path = "/v2/repos/$this->repoName/data";
@@ -106,13 +117,21 @@ final class PipelineService {
     }
 
     private function post($path, $body, $contentType) {
+       return $this->request("POST", $path, $body, $contentType);
+    }
+
+    private function put($path, $body, $contentType) {
+        return $this->request("PUT", $path, $body, $contentType);
+    }
+
+    private function request($method, $path, $body, $contentType) {
 
         $headers['Content-Type'] = $contentType;
-        $accessToken = $this->auth->createAccessToken('POST', $path, $headers, $contentType);
+        $accessToken = $this->auth->createAccessToken($method, $path, $headers, $contentType);
         $headers['Authorization'] = $accessToken;
 
         $url = Config::PIPELINE_API_ADDRESS . $path;
 
-        return Client::post($url, $body, $headers);
+        return Client::request($method, $url, $body, $headers);
     }
 }
