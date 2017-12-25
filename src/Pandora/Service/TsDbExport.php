@@ -13,11 +13,11 @@ class TsDbExport extends Export
 {
     public $destRepoName;
     public $series;
-    public $omitInvalid = false;
-    public $omitEmpty = false;
+    public $omitInvalid;
+    public $omitEmpty;
     public $fields;
     public $tags;
-    public $timestamp = '';
+    public $timestamp;
 
     public function __construct($destRepoName, $series, array $tags, array $fields)
     {
