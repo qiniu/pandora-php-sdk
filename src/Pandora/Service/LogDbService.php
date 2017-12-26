@@ -15,7 +15,7 @@ final class LogDbService {
         $this->auth = $auth;
     }
 
-    public function searchLogs($queryString, $sortByField, $offsetFrom, $limitSize) {
+    public function searchLogs($queryString, $sortByField, $offsetFrom, $limitSize, array $fields = array()) {
         $path = "/v5/repos/$this->repoName/search";
 
         $params = array(
@@ -24,6 +24,10 @@ final class LogDbService {
             'from' => $offsetFrom,
             'size' => $limitSize,
         );
+
+        if (count($fields) != 0) {
+           $params['fields'] = implode(',', $fields);
+        }
 
         $params = json_encode($params);
         return $this->post($path, $params, 'application/json');
@@ -44,7 +48,7 @@ final class LogDbService {
         $accessToken = $this->auth->createAccessToken($method, $path, $headers, $contentType);
         $headers['Authorization'] = $accessToken;
 
-        $url = Config::PIPELINE_API_ADDRESS . $path;
+        $url = Config::LOG_DB_API_ADDRESS . $path;
 
         return Client::request($method, $url, $body, $headers);
     }
