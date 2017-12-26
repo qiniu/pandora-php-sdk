@@ -15,29 +15,51 @@ final class LogDbService {
         $this->auth = $auth;
     }
 
-    public function searchLogs($queryString, $sortByField, $offsetFrom, $limitSize) {
-        $reqPath = "/v5/repos/$this->repoName/search";
-        $reqUri = "$reqPath?q=$queryString&sort=$sortByField&from=$offsetFrom&size=$limitSize";
-        $contentType = '';
-        $reqHeaders = array(
-            'Content-Type' => $contentType,
+    /**
+     * @param string $queryString   查询表达式  eg: field1:field_val
+     * @param string $sortByField   指定排序的字段   eg: field1:asc,field2:desc
+     * @param int $offsetFrom    返回的日志开始的位置
+     * @param int $limitSize     返回的数据数量
+     * @param array $fields  指定只返回哪些字段 eg: array("field1", "field2", ...)
+     * @return \Pandora\Http\Response
+     *
+     * 参考 https://qiniu.github.io/pandora-docs/#/api/logdb?id=%e6%9f%a5%e8%af%a2%e6%97%a5%e5%bf%97
+     */
+    public function searchLogs($queryString, $sortByField, $offsetFrom, $limitSize, array $fields = array()) {
+        $path = "/v5/repos/$this->repoName/search";
+
+        $params = array(
+            'query' => $queryString,
+            'sort' => $sortByField,
+            'from' => $offsetFrom,
+            'size' => $limitSize,
         );
-        $accessToken = $this->auth->createAccessToken('GET', $reqPath, $reqHeaders, $contentType);
-        $reqHeaders['Authorization'] = $accessToken;
-        $reqUrl = sprintf("%s%s", Config::LOG_DB_API_ADDRESS, $reqUri);
-        $response = Client::get($reqUrl, $reqHeaders);
-        return $response;
+
+        if (count($fields) != 0) {
+           $params['fields'] = implode(',', $fields);
+        }
+
+        $params = json_encode($params);
+        return $this->post($path, $params, 'application/json');
     }
+
     public function msearch($querybody) {
-        $reqPath = "/v5/logdbkibana/msearch";
-        $contentType = 'text/plain';
-        $reqHeaders = array(
-            'Content-Type' => $contentType,
-        );
-        $accessToken = $this->auth->createAccessToken('POST', $reqPath, $reqHeaders, $contentType);
-        $reqHeaders['Authorization'] = $accessToken;
-        $reqUrl = sprintf("%s%s", Config::LOG_DB_API_ADDRESS, $reqPath);
-        $response = Client::post($reqUrl,$querybody, $reqHeaders);
-        return $response;
+        $path = "/v5/logdbkibana/msearch";
+        return $this->post($path, $querybody, 'text/plain');
+    }
+
+    private function post($path, $body, $contentType) {
+        return $this->request("POST", $path, $body, $contentType);
+    }
+
+    private function request($method, $path, $body, $contentType) {
+
+        $headers['Content-Type'] = $contentType;
+        $accessToken = $this->auth->createAccessToken($method, $path, $headers, $contentType);
+        $headers['Authorization'] = $accessToken;
+
+        $url = Config::LOG_DB_API_ADDRESS . $path;
+
+        return Client::request($method, $url, $body, $headers);
     }
 }
