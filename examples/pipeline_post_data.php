@@ -10,7 +10,8 @@ $repoName = 'uploadtest';
 $auth = new Auth($accessKey, $secretKey);
 
 $pipeline = new PipelineService($repoName, $auth);
+$pipeline->enablePostDataGzip();
 
-$points = array(array("speed" => 12.3, "ip" => "1.2.3.1"));
+$points = array(array("speed" => 13.3, "ip" => "f.2.3.x"));
 $response = $pipeline->postData($points);
 print_r($response);
