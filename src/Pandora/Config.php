@@ -7,7 +7,6 @@ final class Config
     
     //log db service api
     const LOG_DB_API_ADDRESS="https://logdb.qiniu.com";
-
     const PIPELINE_API_ADDRESS="https://pipeline.qiniu.com";
 }
 

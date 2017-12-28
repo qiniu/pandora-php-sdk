@@ -5,9 +5,9 @@ use Pandora\Service\PipelineService;
 use Pandora\Service\PipelineSchemaEntry;
 use Pandora\Auth;
 
-$accessKey = 'bjtWBQXrcxgo7HWwlC_bgHg81j352_GhgBGZPeOW';
+$accessKey = '';
 $secretKey = '';
-$repoName = 'uploadtest_by_phpsdk';
+$repoName = 'uploadtest_by_phpsdk2';
 $auth = new Auth($accessKey, $secretKey);
 
 $pipeline = new PipelineService($repoName, $auth);

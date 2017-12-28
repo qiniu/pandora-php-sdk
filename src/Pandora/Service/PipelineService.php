@@ -18,10 +18,20 @@ final class PipelineService {
 
     private $repoName;
     private $auth;
+    private $gzipPostData = false;
+    private $gzipLevel = 9;
 
     public function __construct($repoName, $auth) {
         $this->repoName = $repoName;
         $this->auth = $auth;
+    }
+
+    public function enablePostDataGzip() {
+        $this->gzipPostData = true;
+    }
+
+    public function setGzipLevel($level) {
+       $this->gzipLevel = $level;
     }
 
     /**
@@ -42,9 +52,10 @@ final class PipelineService {
         }
 
         $path = "/v2/repos/$this->repoName";
-        $params = json_encode($params);
+        $body = json_encode($params);
+        $headers['Content-Type'] = 'application/json';
 
-        return $this->post($path, $params, 'application/json');
+        return $this->post($path, $body, $headers);
     }
 
     /**
@@ -63,9 +74,10 @@ final class PipelineService {
             'spec' => $spec,
             'whence' => $whence
         );
-        $params = json_encode($params);
+        $body = json_encode($params);
+        $headers['Content-Type'] = 'application/json';
 
-        return $this->post($path, $params, 'application/json');
+        return $this->post($path, $body, $headers);
     }
 
     public function updateExport($exportName, $spec) {
@@ -74,17 +86,24 @@ final class PipelineService {
         $params = array(
             'spec' => $spec,
         );
-        $params = json_encode($params);
+        $body = json_encode($params);
+        $headers['Content-Type'] = 'application/json';
 
-        return $this->put($path, $params, 'application/json');
+        return $this->put($path, $body, $headers);
     }
 
     public function postData(array $points) {
 
         $path = "/v2/repos/$this->repoName/data";
         $body = $this->buildBody($points);
+        $headers['Content-Type'] = 'text/plain';
 
-        return $this->post($path, $body, 'text/plain');
+        if ($this->gzipPostData) {
+            $headers['Content-Encoding'] = 'gzip';
+            $body = gzencode($body, $this->gzipLevel);
+        }
+
+        return $this->post($path, $body, $headers);
     }
 
     private function buildBody(array $points) {
@@ -116,17 +135,17 @@ final class PipelineService {
         return str_replace(array("\n", "\t"),  array('\\n', '\\t'), $str);
     }
 
-    private function post($path, $body, $contentType) {
-       return $this->request("POST", $path, $body, $contentType);
+    private function post($path, $body, $headers) {
+       return $this->request("POST", $path, $body, $headers);
     }
 
-    private function put($path, $body, $contentType) {
-        return $this->request("PUT", $path, $body, $contentType);
+    private function put($path, $body, $headers) {
+        return $this->request("PUT", $path, $body, $headers);
     }
 
-    private function request($method, $path, $body, $contentType) {
+    private function request($method, $path, $body, $headers) {
 
-        $headers['Content-Type'] = $contentType;
+        $contentType  = $headers['Content-Type'];
         $accessToken = $this->auth->createAccessToken($method, $path, $headers, $contentType);
         $headers['Authorization'] = $accessToken;
 
